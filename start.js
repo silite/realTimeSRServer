@@ -32,6 +32,7 @@ function init() {
   speechRecognizer.OnRecognitionResultChange = (res) => {
     const lrc = res?.result?.voice_text_str
     const reduceRes = splitLrc(lrc)
+    global.gatherSocket && global.gatherSocket.send(reduceRes)
     console.log(reduceRes)
   }
   // 一句话结束
@@ -39,6 +40,7 @@ function init() {
     const lrc = res?.result?.voice_text_str
     const reduceRes = splitLrc(lrc)
     logFileName && writeLog(logFileName, reduceRes)
+    global.gatherSocket && global.gatherSocket.send(reduceRes)
     console.log(reduceRes)
   }
   // 识别结束
