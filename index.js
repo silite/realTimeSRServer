@@ -1,29 +1,31 @@
 const ws = require('ws')
 const { start, stop, getStatus } = require('./start.js')
 
-let gatherSocket
-let speechRecognizer
 function startServer() {
   const server = new ws.Server({
     port: 12345,
   });
 
   server.on('connection', (socket, req) => {
-    gatherSocket = socket
-    speechRecognizer = start()
+    global.gatherSocket = socket
 
     socket.on('message', (data) => {
-      const res = data instanceof String ? JSON.parse(data) : data
+      let res
+      try {
+        res = JSON.parse(data.toString())
+      } catch (e) {
+        res = {}
+      }
       switch (res.type) {
         case 'start':
-          speechRecognizer = start()
+          start()
           break
         case 'stop':
           stop()
           break
         default:
           if (getStatus())
-            speechRecognizer.write(data)
+            global.speechRecognizer && global.speechRecognizer.write(data)
       }
     })
 
