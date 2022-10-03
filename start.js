@@ -10,7 +10,6 @@ function init() {
   // 开始识别(此时连接已经建立)
   speechRecognizer.OnRecognitionStart = (res) => {
     console.log('开始识别',)
-    logFileName = (new Date()).toLocaleString().split('/').join('-').split(':').join('.')
     startFlag = true
   }
   // 一句话开始
@@ -39,7 +38,7 @@ function init() {
   speechRecognizer.OnSentenceEnd = (res) => {
     const lrc = res?.result?.voice_text_str
     const reduceRes = splitLrc(lrc)
-    logFileName && writeLog(logFileName, reduceRes)
+    logFileName && writeLog(logFileName[0], logFileName[1], reduceRes)
     global.gatherSocket && global.gatherSocket.send(reduceRes)
     console.log(reduceRes)
   }
@@ -57,6 +56,7 @@ function init() {
 
 exports.start = () => {
   init()
+  logFileName = (new Date()).toLocaleString().split('/').join('-').split(':').join('.').split(' ')
   global.speechRecognizer.start()
 }
 
