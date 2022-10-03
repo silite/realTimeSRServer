@@ -1,7 +1,7 @@
 const fs = require("fs")
 
-function writeLog(log) {
-  fs.writeFileSync('./log.txt', log + '\n', {
+function writeLog(fileName, log) {
+  fs.writeFileSync(`./${fileName}.txt`, log + '\n', {
     flag: 'a+'
   })
 }
